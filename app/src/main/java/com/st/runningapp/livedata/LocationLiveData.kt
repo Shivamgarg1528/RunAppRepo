@@ -10,11 +10,10 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.st.runningapp.db.LatLong
 import com.st.runningapp.di2.annotations.ApplicationContext
 
 class LocationLiveData(@ApplicationContext val applicationContext: Context) :
-    LiveData<LatLong>() {
+    LiveData<Location>() {
 
     private var permissionAvailable = false
     private var mFusedLocationClient =
@@ -30,7 +29,7 @@ class LocationLiveData(@ApplicationContext val applicationContext: Context) :
     }
 
     private fun setLocationData(location: Location) {
-        value = LatLong(latitude = location.latitude, longitude = location.longitude)
+        value = location
     }
 
     override fun onActive() {

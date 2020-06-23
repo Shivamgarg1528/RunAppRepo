@@ -75,7 +75,7 @@ class TrackingFragment : Fragment() {
         mapFragment!!.getMapAsync(callback)
 
         mTrackingViewModel.mLocationLiveData.observe(viewLifecycleOwner) {
-            mainViewModel.insertLatLong(it)
+            mainViewModel.insertLatLong(LatLong(longitude = it.longitude, latitude = it.latitude))
         }
 
         mTrackingViewModel.getAllLatLong().observe(viewLifecycleOwner) {
