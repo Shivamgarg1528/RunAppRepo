@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.st.runningapp.R
@@ -16,10 +17,10 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var mMainVRepository: MainViewModelFactory
+    lateinit var mMainVMFactory: MainViewModelFactory
 
-    private val mMainViewModel by viewModels<MainViewModel> {
-        mMainVRepository
+    val mMainViewModel by viewModels<MainViewModel> {
+        mMainVMFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,11 +33,17 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.findNavController()
             .addOnDestinationChangedListener { _, destination, _ ->
-                when(destination.id) {
+                when (destination.id) {
                     R.id.runFragment, R.id.statisticsFragment, R.id.settingsFragment ->
                         bottomNavigationView.visibility = View.VISIBLE
                     else -> bottomNavigationView.visibility = View.GONE
                 }
             }
+    }
+
+    companion object {
+        fun getMainViewModel(fragment: Fragment): MainViewModel {
+            return (fragment.requireActivity() as MainActivity).mMainViewModel
+        }
     }
 }
