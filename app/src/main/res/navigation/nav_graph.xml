@@ -37,13 +37,9 @@
             app:popUpTo="@id/setupFragment"
             app:popUpToInclusive="true" />
     </fragment>
-
     <fragment
         android:id="@+id/trackingFragment"
         android:name="com.st.runningapp.ui.fragments.TrackingFragment"
-        android:label="TrackingFragment">
-        <action
-            android:id="@+id/action_trackingFragment_to_runFragment"
-            app:destination="@id/runFragment" />
-    </fragment>
-</navigation> 
+        android:label="TrackingFragment" />
+
+</navigation>
