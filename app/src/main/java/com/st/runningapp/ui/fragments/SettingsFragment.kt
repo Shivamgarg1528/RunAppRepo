@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.st.runningapp.R
 import com.st.runningapp.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -17,7 +18,16 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         if (mainViewModel.isUserDataAvailable()) {
             etName.setText(mainViewModel.getName())
             etWeight.setText(mainViewModel.getWeight().toString())
+            logout.visibility = View.VISIBLE
         }
+
+        logout.setOnClickListener {
+            mainViewModel.clearUserInfo()
+            Toast.makeText(requireContext(), "User Info Cleared Successfully", Toast.LENGTH_SHORT)
+                .show()
+            findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToSetupFragment())
+        }
+
         btnApplyChanges.setOnClickListener {
             if (etName.text.isNullOrBlank()) {
                 Toast.makeText(

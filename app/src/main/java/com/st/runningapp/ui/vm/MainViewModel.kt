@@ -43,7 +43,10 @@ class MainViewModel(
 
     fun saveUserInfo(userName: String, weight: Int) = mainRepository.saveUserInfo(userName, weight)
 
+    fun clearUserInfo() = mainRepository.clearUserInfo()
+
     fun getName() = mainRepository.getName()
 
     fun getWeight() = mainRepository.getWeight()
+
 }

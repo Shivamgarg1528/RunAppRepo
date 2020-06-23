@@ -14,11 +14,11 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mainViewModel = MainActivity.getMainViewModel(this)
+        if (mainViewModel.isUserDataAvailable()) {
+            findNavController().navigate(SetupFragmentDirections.actionSetupFragmentToRunFragment())
+            return
+        }
         tvContinue.setOnClickListener {
-            if (mainViewModel.isUserDataAvailable()) {
-                findNavController().navigate(SetupFragmentDirections.actionSetupFragmentToRunFragment())
-                return@setOnClickListener
-            }
             if (etName.text.isNullOrBlank()) {
                 Toast.makeText(
                     requireContext(),

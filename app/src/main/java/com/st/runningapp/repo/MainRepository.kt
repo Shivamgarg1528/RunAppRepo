@@ -43,6 +43,8 @@ class MainRepository @Inject constructor(
     fun saveUserInfo(userName: String, weight: Int) =
         appSharedPreference.saveUserInfo(userName, weight)
 
+    fun clearUserInfo() = appSharedPreference.clearUserInfo()
+
     fun getName() = appSharedPreference.getName()
 
     fun getWeight() = appSharedPreference.getWeight()

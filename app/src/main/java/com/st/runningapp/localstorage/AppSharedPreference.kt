@@ -20,4 +20,10 @@ class AppSharedPreference @Inject constructor(private val sharedPreference: Shar
     fun getWeight(): Int {
         return sharedPreference.getInt("weight", -1)
     }
+
+    fun clearUserInfo() {
+        sharedPreference.edit {
+            clear()
+        }
+    }
 }
