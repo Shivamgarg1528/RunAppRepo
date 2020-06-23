@@ -1,5 +1,8 @@
 package com.st.runningapp.repo
 
+import androidx.lifecycle.LiveData
+import com.st.runningapp.db.LatLong
+import com.st.runningapp.db.LatLongDAO
 import com.st.runningapp.db.Run
 import com.st.runningapp.db.RunDAO
 import com.st.runningapp.localstorage.AppSharedPreference
@@ -7,6 +10,7 @@ import javax.inject.Inject
 
 class MainRepository @Inject constructor(
     private val runDao: RunDAO,
+    private val latLongDAO: LatLongDAO,
     private val appSharedPreference: AppSharedPreference
 ) {
 
@@ -33,6 +37,13 @@ class MainRepository @Inject constructor(
     fun getTotalCaloriesBurned() = runDao.getTotalCaloriesBurned()
 
     fun getTotalTimeInMillis() = runDao.getTotalTimeInMillis()
+
+    // lat-long db operations
+    suspend fun insertLatLong(latLong: LatLong) = latLongDAO.insertLatLong(latLong)
+
+    suspend fun clearAllLatLong() = latLongDAO.clearAllLatLong()
+
+    fun getAllLatLong(): LiveData<List<LatLong>> = latLongDAO.getAllLatLong()
 
     // saving user data
 

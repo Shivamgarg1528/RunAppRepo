@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.st.runningapp.db.AppRunningDB
+import com.st.runningapp.db.LatLongDAO
 import com.st.runningapp.db.RunDAO
 import com.st.runningapp.di2.annotations.ApplicationContext
 import dagger.Module
@@ -35,5 +36,11 @@ class AppModule {
     @Singleton
     fun provideDatabaseRunDAO(appRunningDB: AppRunningDB): RunDAO {
         return appRunningDB.getRunDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabaseLatLongDAO(appRunningDB: AppRunningDB): LatLongDAO {
+        return appRunningDB.getLatLongDao()
     }
 }

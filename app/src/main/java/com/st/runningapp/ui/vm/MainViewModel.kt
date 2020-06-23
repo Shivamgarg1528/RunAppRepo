@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.st.runningapp.db.LatLong
 import com.st.runningapp.db.Run
 import com.st.runningapp.repo.MainRepository
 import kotlinx.coroutines.launch
@@ -49,4 +50,9 @@ class MainViewModel(
 
     fun getWeight() = mainRepository.getWeight()
 
+    fun insertLatLong(latLong: LatLong) {
+        viewModelScope.launch {
+            mainRepository.insertLatLong(latLong)
+        }
+    }
 }

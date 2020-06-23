@@ -5,6 +5,7 @@ import com.st.runningapp.di2.annotations.ApplicationContext
 import com.st.runningapp.di2.module.AppModule
 import com.st.runningapp.repo.MainRepository
 import com.st.runningapp.ui.MainActivity
+import com.st.runningapp.ui.fragments.TrackingFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -16,6 +17,7 @@ interface AppComponent {
     fun getMainRepository(): MainRepository
 
     fun inject(mainActivity: MainActivity)
+    fun inject(trackingFragment: TrackingFragment)
 
     @Component.Factory
     interface Factory {
