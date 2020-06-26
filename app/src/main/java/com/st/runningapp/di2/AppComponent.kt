@@ -1,6 +1,7 @@
 package com.st.runningapp.di2
 
 import android.app.Application
+import android.app.NotificationChannel
 import com.st.runningapp.di2.annotations.ApplicationContext
 import com.st.runningapp.di2.module.AppModule
 import com.st.runningapp.repo.MainRepository
@@ -15,6 +16,8 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun getMainRepository(): MainRepository
+
+    fun getNotificationChannel(): NotificationChannel
 
     fun inject(mainActivity: MainActivity)
     fun inject(trackingFragment: TrackingFragment)

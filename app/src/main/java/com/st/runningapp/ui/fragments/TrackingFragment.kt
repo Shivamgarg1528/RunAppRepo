@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.st.runningapp.LocationService
 import com.st.runningapp.R
 import com.st.runningapp.RunningApp
 import com.st.runningapp.db.LatLong
@@ -44,6 +45,7 @@ class TrackingFragment : Fragment() {
         super.onAttach(context)
         RunningApp.getAppComponent().inject(this)
         mTrackingViewModel.clearAllLatLong() // clearing all record from db before inserting new records
+        LocationService.start(requireContext())
     }
 
     override fun onCreateView(

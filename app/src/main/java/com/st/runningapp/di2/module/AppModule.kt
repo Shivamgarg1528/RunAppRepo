@@ -1,8 +1,12 @@
 package com.st.runningapp.di2.module
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.st.runningapp.db.AppRunningDB
 import com.st.runningapp.db.LatLongDAO
@@ -42,5 +46,15 @@ class AppModule {
     @Singleton
     fun provideDatabaseLatLongDAO(appRunningDB: AppRunningDB): LatLongDAO {
         return appRunningDB.getLatLongDao()
+    }
+
+    @Provides
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun provideDefaultNotificationChannel(): NotificationChannel {
+        return NotificationChannel(
+            "Foreground Notification Test",
+            "RunningAppTest",
+            NotificationManager.IMPORTANCE_HIGH
+        )
     }
 }

@@ -40,6 +40,11 @@
     <fragment
         android:id="@+id/trackingFragment"
         android:name="com.st.runningapp.ui.fragments.TrackingFragment"
-        android:label="TrackingFragment" />
+        android:label="TrackingFragment">
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="https://runningapp.com/track" />
+    </fragment>
 
 </navigation>
