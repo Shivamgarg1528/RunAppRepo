@@ -12,9 +12,10 @@ import com.st.runningapp.db.AppRunningDB
 import com.st.runningapp.db.LatLongDAO
 import com.st.runningapp.db.RunDAO
 import com.st.runningapp.di2.annotations.ApplicationContext
+import com.st.runningapp.others.Constant.CHANNEL_ID
+import com.st.runningapp.others.Constant.CHANNEL_NAME
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -52,9 +53,9 @@ class AppModule {
     @RequiresApi(Build.VERSION_CODES.O)
     fun provideDefaultNotificationChannel(): NotificationChannel {
         return NotificationChannel(
-            "Foreground Notification Test",
-            "RunningAppTest",
-            NotificationManager.IMPORTANCE_HIGH
+            CHANNEL_ID,
+            CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_LOW
         )
     }
 }

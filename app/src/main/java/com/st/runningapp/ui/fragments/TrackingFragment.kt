@@ -16,10 +16,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
-import com.st.runningapp.LocationService
 import com.st.runningapp.R
 import com.st.runningapp.RunningApp
+import com.st.runningapp.TrackingService
 import com.st.runningapp.db.LatLong
+import com.st.runningapp.others.Constant.ACTION_START_AND_RESUME_SERVICE
+import com.st.runningapp.others.Constant.ACTION_STOP_SERVICE
 import com.st.runningapp.ui.MainActivity
 import com.st.runningapp.ui.vm.TrackViewModel
 import com.st.runningapp.ui.vm.factory.TrackViewModelFactory
@@ -45,7 +47,6 @@ class TrackingFragment : Fragment() {
         super.onAttach(context)
         RunningApp.getAppComponent().inject(this)
         mTrackingViewModel.clearAllLatLong() // clearing all record from db before inserting new records
-        LocationService.start(requireContext())
     }
 
     override fun onCreateView(
@@ -67,10 +68,20 @@ class TrackingFragment : Fragment() {
         }
 
         run.setOnClickListener {
-
+            TrackingService.sendCommand(
+                requireContext(),
+                ACTION_START_AND_RESUME_SERVICE
+            )
+            run.visibility = View.GONE
+            stop.visibility = View.VISIBLE
         }
         stop.setOnClickListener {
-
+            TrackingService.sendCommand(
+                requireContext(),
+                ACTION_STOP_SERVICE
+            )
+            run.visibility = View.VISIBLE
+            stop.visibility = View.GONE
         }
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?

@@ -45,7 +45,8 @@
             <nav-graph android:value="@navigation/nav_graph"/>
         </activity>
 
-        <service android:name=".LocationService" />
+        <service android:name=".TrackingService"
+            android:foregroundServiceType="location"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

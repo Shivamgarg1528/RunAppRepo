@@ -18,13 +18,6 @@ class RunningApp : Application() {
             Timber.plant(DebugTree()) // enable timber in debug mode
         }
         mAppComponent = DaggerAppComponent.factory().create(this) // app component init
-        // creating default notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            (getSystemService(NotificationManager::class.java) as NotificationManager).createNotificationChannel(
-                mAppComponent.getNotificationChannel()
-            )
-        }
-        Util.getOrCreateNotification(this)
     }
 
     companion object {
