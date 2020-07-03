@@ -10,25 +10,34 @@ import android.os.Build
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavDeepLinkBuilder
 import com.st.runningapp.livedata.LocationLiveData
 import com.st.runningapp.others.Constant.ACTION_START_AND_RESUME_SERVICE
 import com.st.runningapp.others.Constant.ACTION_STOP_SERVICE
 import com.st.runningapp.others.Constant.CHANNEL_ID
 import com.st.runningapp.others.Constant.NOTIFICATION_ID
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 class TrackingService : LifecycleService() {
 
     private lateinit var mLocationLiveData: LocationLiveData
+    private val mainScope = MainScope()
+    private var mSeconds: Long = 0
 
     override fun onCreate() {
         super.onCreate()
         Timber.i("onCreate() called")
         mLocationLiveData = LocationLiveData(this)
-        mLocationLiveData.observeForever {
+        mLocationLiveData.observe(this, Observer {
             Timber.i("location data--> $it")
-        }
+        })
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -38,11 +47,17 @@ class TrackingService : LifecycleService() {
             when (intent.action) {
                 ACTION_START_AND_RESUME_SERVICE -> {
                     createNotificationChannel()
-                    startForeground(NOTIFICATION_ID, getOrCreateNotification(this))
+                    startForeground(NOTIFICATION_ID, getOrCreateNotification(this, "00:00:00"))
+                    startTimer()
+                    mServiceStatusLiveData.postValue(true)
                 }
                 ACTION_STOP_SERVICE -> {
+                    stopForeground(true)
                     stopSelf()
-                    Toast.makeText(this, "Service Stopped Successfully", Toast.LENGTH_SHORT).show()
+                    stopTimer()
+                    mServiceStatusLiveData.postValue(false)
+                }
+                else -> {
                 }
             }
         }
@@ -55,6 +70,10 @@ class TrackingService : LifecycleService() {
     }
 
     companion object {
+
+        val mTimerLiveData = MutableLiveData("00:00:00")
+        val mServiceStatusLiveData = MutableLiveData(false)
+
         fun sendCommand(context: Context, actionString: String) {
             with(Intent(context, TrackingService::class.java)) {
                 action = actionString
@@ -74,7 +93,7 @@ class TrackingService : LifecycleService() {
         }
     }
 
-    private fun getOrCreateNotification(context: Context): Notification {
+    private fun getOrCreateNotification(context: Context, time: String): Notification {
         // 1- will open tracking fragment
         val pendingIntent: PendingIntent = NavDeepLinkBuilder(context)
             .setGraph(R.navigation.nav_graph)
@@ -105,12 +124,37 @@ class TrackingService : LifecycleService() {
         builder.addAction(
             Notification.Action.Builder(
                 R.drawable.ic_close_white,
-                "Stop",
+                "Finish Run",
                 serviceStopPendingIntent
             ).build()
         )
         builder.setContentTitle("Tracking User Steps")
-        builder.setContentText("00:00:00:00")
+        builder.setContentText(time)
+        builder.setShowWhen(true)
+        builder.setWhen(System.currentTimeMillis())
         return builder.build()
+    }
+
+    private fun startTimer() {
+        mainScope.launch {
+            mSeconds++
+            val hours = mSeconds / 3600
+            val minutes = (mSeconds % 3600) / 60
+            val seconds = mSeconds % 60
+            val time = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
+            getOrCreateNotification(this@TrackingService, time).also {
+                (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(
+                    NOTIFICATION_ID,
+                    it
+                )
+            }
+            mTimerLiveData.postValue(time)
+            delay(1000)
+            startTimer()
+        }
+    }
+
+    private fun stopTimer() {
+        mainScope.cancel()
     }
 }

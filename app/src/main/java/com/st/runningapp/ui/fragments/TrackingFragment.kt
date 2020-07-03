@@ -62,8 +62,7 @@ class TrackingFragment : Fragment() {
         val mainViewModel = MainActivity.getMainViewModel(this)
 
         if (mainViewModel.isUserDataAvailable()) {
-            label.text =
-                "Let's go, " + mainViewModel.getName().toUpperCase(Locale.getDefault()) + " !"
+            label.text = "Let's go, " + mainViewModel.getName().toUpperCase(Locale.getDefault()) + " !"
             label.visibility = View.VISIBLE
         }
 
@@ -72,25 +71,33 @@ class TrackingFragment : Fragment() {
                 requireContext(),
                 ACTION_START_AND_RESUME_SERVICE
             )
-            run.visibility = View.GONE
-            stop.visibility = View.VISIBLE
         }
         stop.setOnClickListener {
             TrackingService.sendCommand(
                 requireContext(),
                 ACTION_STOP_SERVICE
             )
-            run.visibility = View.VISIBLE
-            stop.visibility = View.GONE
         }
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(callback)
 
-        mTrackingViewModel.mLocationLiveData.observe(viewLifecycleOwner) {
+        /*mTrackingViewModel.mLocationLiveData.observe(viewLifecycleOwner) {
             mainViewModel.insertLatLong(LatLong(longitude = it.longitude, latitude = it.latitude))
-        }
+        }*/
 
+        TrackingService.mTimerLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { time ->
+            timer.text = time
+        })
+        TrackingService.mServiceStatusLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { serviceRunning ->
+            if (serviceRunning) {
+                run.visibility = View.GONE
+                stop.visibility = View.VISIBLE
+            } else {
+                run.visibility = View.VISIBLE
+                stop.visibility = View.GONE
+            }
+        })
         mTrackingViewModel.getAllLatLong().observe(viewLifecycleOwner) {
             mList = it
             drawLine()

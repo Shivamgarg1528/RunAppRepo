@@ -11,6 +11,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.st.runningapp.di2.annotations.ApplicationContext
+import com.st.runningapp.others.Util
+import timber.log.Timber
 
 class LocationLiveData(@ApplicationContext val applicationContext: Context) :
     LiveData<Location>() {
@@ -34,15 +36,8 @@ class LocationLiveData(@ApplicationContext val applicationContext: Context) :
 
     override fun onActive() {
         super.onActive()
-        if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                applicationContext,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            && PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
-                applicationContext,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        ) {
+        Timber.i("onActive()")
+        if (Util.checkLocationPermission(applicationContext)) {
             permissionAvailable = true
             mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 location?.also {
@@ -59,6 +54,7 @@ class LocationLiveData(@ApplicationContext val applicationContext: Context) :
 
     override fun onInactive() {
         super.onInactive()
+        Timber.i("onInactive()")
         if (permissionAvailable) {
             mFusedLocationClient.removeLocationUpdates(locationCallback)
         }
