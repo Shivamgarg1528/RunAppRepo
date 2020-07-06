@@ -12,9 +12,6 @@ import kotlinx.coroutines.launch
 class TrackViewModel(application: Application, private val mainRepository: MainRepository) :
     AndroidViewModel(application) {
 
-    var mLocationLiveData = LocationLiveData(application)
-        private set
-
     fun getAllLatLong(): LiveData<List<LatLong>> = mainRepository.getAllLatLong()
 
     fun clearAllLatLong() {

@@ -7,28 +7,26 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDeepLinkBuilder
+import com.st.runningapp.db.LatLong
 import com.st.runningapp.livedata.LocationLiveData
 import com.st.runningapp.others.Constant.ACTION_START_AND_RESUME_SERVICE
 import com.st.runningapp.others.Constant.ACTION_STOP_SERVICE
 import com.st.runningapp.others.Constant.CHANNEL_ID
 import com.st.runningapp.others.Constant.NOTIFICATION_ID
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.*
 
 class TrackingService : LifecycleService() {
 
     private lateinit var mLocationLiveData: LocationLiveData
-    private val mainScope = MainScope()
+    private val mTimerScope = MainScope() + Dispatchers.IO
+    private val mLocationScope = MainScope() + Dispatchers.IO
     private var mSeconds: Long = 0
 
     override fun onCreate() {
@@ -37,6 +35,15 @@ class TrackingService : LifecycleService() {
         mLocationLiveData = LocationLiveData(this)
         mLocationLiveData.observe(this, Observer {
             Timber.i("location data--> $it")
+            mLocationScope.launch {
+                RunningApp.getAppComponent().getMainRepository()
+                    .insertLatLong(
+                        LatLong(
+                            longitude = it.longitude,
+                            latitude = it.latitude
+                        )
+                    )
+            }
         })
     }
 
@@ -72,7 +79,7 @@ class TrackingService : LifecycleService() {
     companion object {
 
         val mTimerLiveData = MutableLiveData("00:00:00")
-        val mServiceStatusLiveData = MutableLiveData(false)
+        val mServiceStatusLiveData = MutableLiveData<Boolean>()
 
         fun sendCommand(context: Context, actionString: String) {
             with(Intent(context, TrackingService::class.java)) {
@@ -121,13 +128,13 @@ class TrackingService : LifecycleService() {
         builder.setOngoing(true)
         builder.setSmallIcon(R.drawable.ic_run)
         builder.setContentIntent(pendingIntent)
-        builder.addAction(
+        /*builder.addAction(
             Notification.Action.Builder(
                 R.drawable.ic_close_white,
                 "Finish Run",
                 serviceStopPendingIntent
             ).build()
-        )
+        )*/
         builder.setContentTitle("Tracking User Steps")
         builder.setContentText(time)
         builder.setShowWhen(true)
@@ -136,7 +143,7 @@ class TrackingService : LifecycleService() {
     }
 
     private fun startTimer() {
-        mainScope.launch {
+        mTimerScope.launch {
             mSeconds++
             val hours = mSeconds / 3600
             val minutes = (mSeconds % 3600) / 60
@@ -155,6 +162,7 @@ class TrackingService : LifecycleService() {
     }
 
     private fun stopTimer() {
-        mainScope.cancel()
+        mTimerScope.cancel()
+        mLocationScope.cancel()
     }
 }
