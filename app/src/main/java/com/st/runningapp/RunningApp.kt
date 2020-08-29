@@ -1,17 +1,16 @@
 package com.st.runningapp
 
 import android.app.Application
-import android.app.NotificationManager
-import android.os.Build
+import com.google.firebase.perf.metrics.AddTrace
 import com.st.runningapp.di2.AppComponent
 import com.st.runningapp.di2.DaggerAppComponent
-import com.st.runningapp.others.Util
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
 
 class RunningApp : Application() {
 
+    @AddTrace(name = "custom_application_on_create")
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "802638559707",
+    "firebase_url": "https://running-cbdcd.firebaseio.com",
+    "project_id": "running-cbdcd",
+    "storage_bucket": "running-cbdcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802638559707:android:b76f56170eb6f6fef60ffe",
+        "android_client_info": {
+          "package_name": "com.st.quicklearner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802638559707-mhlqqgmmn8433t9pve7k9u10i4nb4fm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN_eaOV3qdnQwA9eF4KZm6T4lxMii-t1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802638559707-mhlqqgmmn8433t9pve7k9u10i4nb4fm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
